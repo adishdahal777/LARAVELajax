@@ -3,7 +3,6 @@
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,3 +24,4 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::post('/data/data/submit',[HomeController::class, 'store'])->name('data.submit.data');
 Route::get('/data/get/data', [HomeController::class, 'getData'])->name('data.get.data');
+

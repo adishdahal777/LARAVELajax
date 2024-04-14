@@ -46,6 +46,19 @@
 
                         <table class="table d-none" id="tableView">
                             <thead>
+                                {{-- For search --}}
+                                <tr>
+                                    <th colspan="2">
+                                        <input type="text" name="search" id="search" class="form-control"
+                                            placeholder="Search From Name">
+                                    </th>
+                                    <th></th>
+                                    <th><input type="text" name="emailSearch" id="emailSearch"
+                                            placeholder="Search By emai" class="form-control"></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Fullname</th>
@@ -106,13 +119,22 @@
                 }
             });
 
-            function getDataFromBackend() {
+            // changes of search
+            function getDataFromBackend(search) {
                 var content = $('#malaiDataDenuHai');
                 content.empty();
-                $.get("{{ route('data.get.data') }}", function(data, status) {
-                    var row = "";
-                    data.data.forEach((d, index) => {
-                        row = `<tr>
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('data.get.data') }}",
+                    data: [{
+                        name: "emailSearch",
+                        value: search
+                    }],
+                    dataType: "json",
+                    success: function(data) {
+                        var row = "";
+                        data.data.forEach((d, index) => {
+                            row = `<tr>
                             <td>${++index}</td>
                             <td>${d.name}</td>
                             <td>${d.phone}</td>
@@ -120,13 +142,24 @@
                             <td>${d.address}</td>
                             <td>${d.gender}</td>
                             </tr>`;
-                        content.append(row);
-                    });
+                            content.append(row);
+                        });
+                    }
                 });
-
             }
 
+            // for search
+            $('#emailSearch').keyup(function(e) {
+                e.preventDefault();
+                var searchEmail = $('#emailSearch').val();
+                getDataFromBackend(searchEmail);
+            });
 
+            $('#search').keyup(function(e) {
+                e.preventDefault();
+                var search = $('#search').val();
+                getDataFromBackend(search)
+            });
 
             $('#formID').submit(function(e) {
                 e.preventDefault();

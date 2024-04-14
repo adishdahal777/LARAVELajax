@@ -54,8 +54,21 @@ class HomeController extends Controller
         }
     }
 
-    public function getData(){
-        $data = DataUser::orderBy('id', 'DESC')->get();
-        return response()->json(['success'=>true, "data"=>$data],200);
+    public function getData()
+    {
+        // dd(request()->all());
+        $data = DataUser::orderBy('id', 'DESC');
+
+        // for search
+        if (request()->has('search') && request('search') != null) {
+            $data->where('name', 'LIKE', '%' . request('search') . '%');
+        }
+
+        if(request()->has('emailSearch') && request('emailSearch') != null){
+            $data->where('email', 'LIKE', '%' . request('emailSearch') . '%');
+        }
+
+        $result = $data->get();
+        return response()->json(['success' => true, 'data' => $result], 200);
     }
 }
